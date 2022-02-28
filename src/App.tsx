@@ -21,6 +21,26 @@ createServer({
         { id: 1, user: 'admin', password: '123456' },
         { id: 2, user: 'comum', password: '123456' },
       ],
+      clients: [
+        {
+          id: 1,
+          name: 'ryan',
+          cpf: '12345678901',
+          address: {
+            zipcode: '123456',
+            street: 'aaa',
+            district: 'bbb',
+            city: 'ccc',
+            state: 'ddd',
+            complemento: 'eee',
+          },
+          phone: {
+            type: 'residencial', // residencial, comercial e celular
+            number: '123456',
+          },
+          email: 'ryan@gmail.com',
+        },
+      ],
     });
   },
   routes() {

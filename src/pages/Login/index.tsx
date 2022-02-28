@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 
 import { FormHandles } from '@unform/core';
+import { useNavigate } from 'react-router-dom';
 import * as Yup from 'yup';
 
 import Button from '../../components/Button';
@@ -12,6 +13,7 @@ export default function Login() {
   const { signIn, signOut } = useAuth();
   const formRef = useRef<FormHandles>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate();
 
   const handleFormSubmit = async (
     data: UserSignInType,
@@ -28,8 +30,11 @@ export default function Login() {
       await schema.validate(data, { abortEarly: false });
 
       const response = await signIn(data);
-      if (response) reset();
       setIsLoading(false);
+      if (response) {
+        reset();
+        navigate('/home', { replace: true });
+      }
     } catch (err) {
       if (err instanceof Yup.ValidationError) {
         const errorMessages: any = {};
