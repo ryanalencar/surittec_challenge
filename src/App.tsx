@@ -2,6 +2,7 @@
 import React from 'react';
 
 import { createServer, Model } from 'miragejs';
+import Modal from 'react-modal';
 import { BrowserRouter } from 'react-router-dom';
 import { ThemeProvider } from 'styled-components';
 
@@ -28,12 +29,12 @@ createServer({
           name: 'ryan',
           cpf: '12345678901',
           address: {
-            zipcode: '60125101',
             street: 'Rua Tibúrcio Cavalcante 2570',
+            zipcode: '60125101',
             district: 'Dionísio Torres',
             city: 'Fortaleza',
             state: 'CE',
-            complemento: 'Apto 302',
+            complement: 'Apto 302',
           },
           phone: {
             type: 'residencial', // residencial, comercial e celular
@@ -54,6 +55,8 @@ createServer({
     this.get('clients', () => this.schema.all('client'));
   },
 });
+
+Modal.setAppElement('#root');
 
 function App() {
   return (
