@@ -9,6 +9,9 @@ interface ITheme {
     purpleLight: string;
     purpleMid: string;
     purpleDark: string;
+    greenLight: string;
+    greenMid: string;
+    greenDark: string;
     text: string;
   };
 }
@@ -24,6 +27,9 @@ export const theme: ITheme = {
     purpleLight: '#996DFF',
     purpleMid: '#8257E5',
     purpleDark: '#633BBC',
+    greenLight: '#00B37E',
+    greenMid: '#00875F',
+    greenDark: '#015F43',
     text: '#C4C4CC',
   },
 };
