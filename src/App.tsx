@@ -43,11 +43,7 @@ function App() {
     if (response) setUser(response.data.user.user);
   };
 
-  return (
-    <button type="button" onClick={handleButtonClick}>
-      Surittect Challenge
-    </button>
-  );
+  return <h1>App Page</h1>;
 }
 
 export default App;
