@@ -27,6 +27,7 @@ module.exports = {
     'unused-imports'
   ],
   rules: {
+    'react/require-default-props': 'off',
     'react/jsx-wrap-multilines': 'off',
     'import/no-cycle': 'off',
     'react/jsx-curly-newline': 'off',

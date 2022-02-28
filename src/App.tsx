@@ -1,6 +1,14 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import React from 'react';
 
 import { createServer, Model } from 'miragejs';
+import { BrowserRouter } from 'react-router-dom';
+import { ThemeProvider } from 'styled-components';
+
+import { AuthProvider } from './hooks/useAuth';
+import { AppRoutes } from './routes';
+import { GlobalStyle } from './styles/global';
+import { theme } from './styles/theme';
 
 createServer({
   models: {
@@ -27,24 +35,15 @@ createServer({
 });
 
 function App() {
-  // const handleFormSubmit = async (e: FormEvent) => {
-  //   e.preventDefault();
-  //   const response = await api.post('sessions', {
-  //     user: 'admin',
-  //     password: '123456',
-  //   });
-  //   if (response) setUser(response.data.user.user);
-  // };
-
   return (
-    <>
-      <h1>Login Page</h1>
-      <form onSubmit={() => {}}>
-        <input type="text" placeholder="Usuário" />
-        <input type="password" placeholder="Senha" />
-        <button type="submit">Entrar</button>
-      </form>
-    </>
+    <BrowserRouter>
+      <ThemeProvider theme={theme}>
+        <AuthProvider>
+          <AppRoutes />
+        </AuthProvider>
+        <GlobalStyle />
+      </ThemeProvider>
+    </BrowserRouter>
   );
 }
 

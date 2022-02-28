@@ -19,6 +19,7 @@ export const GlobalStyle = createGlobalStyle`
 
   h1, h2, h3, h4, h5, h6, strong {
     font-weight: 600;
+    color: ${({ theme }) => theme.colors.text};
   }
 
   button {
@@ -32,7 +33,7 @@ export const GlobalStyle = createGlobalStyle`
 
   #root {
     margin: 0 auto;
-    max-width: 330px;
+    max-width: 400px;
     width: 100%;
     padding: 40px 0;
   }

@@ -5,18 +5,15 @@ import { useLocalStorage } from './useLocalStorage';
 
 interface AuthContextType {
   user: any;
-  signIn: (
-    user: { user: string; password: string },
-    callback?: VoidFunction,
-  ) => void;
-  signOut: (callback?: VoidFunction) => void;
+  signIn: (user: { user: string; password: string }) => Promise<any>;
+  signOut: () => void;
 }
 
 interface User {
   user: string;
 }
 
-interface UserSignInType {
+export interface UserSignInType {
   user: string;
   password: string;
 }
@@ -26,15 +23,21 @@ const AuthContext = createContext<AuthContextType>({} as AuthContextType);
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useLocalStorage<User>('user', {} as User);
 
-  const signIn = async (_user: UserSignInType, callback?: VoidFunction) => {
-    const response = await api.post('sessions', _user);
-    if (response) setUser(response.data.user.user);
-    if (callback) callback();
+  const signIn = async (_user: UserSignInType) => {
+    try {
+      const response = await api.post('sessions', _user);
+      if (response) {
+        setUser(response.data.user.user);
+        return response;
+      }
+      return response;
+    } catch (error) {
+      console.log(error);
+    }
   };
 
-  const signOut = (callback?: VoidFunction) => {
+  const signOut = () => {
     setUser({ user: '' });
-    if (callback) callback();
   };
 
   const value = useMemo(
