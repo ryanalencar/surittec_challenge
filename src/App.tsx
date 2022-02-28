@@ -6,6 +6,7 @@ import { BrowserRouter } from 'react-router-dom';
 import { ThemeProvider } from 'styled-components';
 
 import { AuthProvider } from './hooks/useAuth';
+import { ModalProvider } from './hooks/useModal';
 import { AppRoutes } from './routes';
 import { GlobalStyle } from './styles/global';
 import { theme } from './styles/theme';
@@ -27,12 +28,12 @@ createServer({
           name: 'ryan',
           cpf: '12345678901',
           address: {
-            zipcode: '123456',
-            street: 'aaa',
-            district: 'bbb',
-            city: 'ccc',
-            state: 'ddd',
-            complemento: 'eee',
+            zipcode: '60125101',
+            street: 'Rua Tibúrcio Cavalcante 2570',
+            district: 'Dionísio Torres',
+            city: 'Fortaleza',
+            state: 'CE',
+            complemento: 'Apto 302',
           },
           phone: {
             type: 'residencial', // residencial, comercial e celular
@@ -58,10 +59,12 @@ function App() {
   return (
     <BrowserRouter>
       <ThemeProvider theme={theme}>
-        <AuthProvider>
-          <AppRoutes />
-        </AuthProvider>
-        <GlobalStyle />
+        <ModalProvider>
+          <AuthProvider>
+            <AppRoutes />
+          </AuthProvider>
+          <GlobalStyle />
+        </ModalProvider>
       </ThemeProvider>
     </BrowserRouter>
   );
