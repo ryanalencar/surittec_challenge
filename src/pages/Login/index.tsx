@@ -10,9 +10,9 @@ import { useAuth, UserSignInType } from '../../hooks/useAuth';
 import * as S from './styles';
 
 export default function Login() {
-  const { signIn, signOut } = useAuth();
-  const formRef = useRef<FormHandles>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const formRef = useRef<FormHandles>(null);
+  const { signIn, signOut } = useAuth();
   const navigate = useNavigate();
 
   const handleFormSubmit = async (
