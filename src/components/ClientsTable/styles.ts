@@ -28,3 +28,17 @@ export const TableTbodyItem = styled.td`
     font-weight: bold;
   }
 `;
+
+export const TableTbodyActions = styled.div`
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+`;
+
+export const TableActionButton = styled.button`
+  border: 0;
+  background: transparent;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;

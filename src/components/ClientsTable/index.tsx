@@ -1,5 +1,9 @@
 import React, { useEffect, useState } from 'react';
 
+import { IoMdTrash } from 'react-icons/io';
+import { IoPencil } from 'react-icons/io5';
+import { useTheme } from 'styled-components';
+
 import { api } from '../../services/api';
 import * as S from './styles';
 
@@ -24,7 +28,7 @@ interface ClientsType {
 
 export default function ClientsTable() {
   const [clients, setClients] = useState<ClientsType[]>([]);
-
+  const theme = useTheme();
   useEffect(() => {
     api.get('clients').then((res) => {
       setClients(res.data.clients);
@@ -41,6 +45,7 @@ export default function ClientsTable() {
             <S.TableTheadItem>Email</S.TableTheadItem>
             <S.TableTheadItem>Número</S.TableTheadItem>
             <S.TableTheadItem>Endereço</S.TableTheadItem>
+            <S.TableTheadItem>Ações</S.TableTheadItem>
           </tr>
         </thead>
         <tbody>
@@ -51,6 +56,16 @@ export default function ClientsTable() {
               <S.TableTbodyItem>{email}</S.TableTbodyItem>
               <S.TableTbodyItem>{phone.number}</S.TableTbodyItem>
               <S.TableTbodyItem>{`${address.street} - ${address.district}, ${address.city}-${address.state}, ${address.zipcode}`}</S.TableTbodyItem>
+              <S.TableTbodyItem>
+                <S.TableTbodyActions>
+                  <S.TableActionButton onClick={() => {}}>
+                    <IoPencil size={25} color={theme.colors.purpleLight} />
+                  </S.TableActionButton>
+                  <S.TableActionButton onClick={() => {}}>
+                    <IoMdTrash size={25} color={theme.colors.error} />
+                  </S.TableActionButton>
+                </S.TableTbodyActions>
+              </S.TableTbodyItem>
             </tr>
           ))}
         </tbody>
