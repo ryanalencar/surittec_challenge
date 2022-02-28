@@ -8,9 +8,5 @@ interface IButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 }
 
 export default function Button({ title, loading, ...rest }: IButtonProps) {
-  return (
-    <S.Button disabled={loading} {...rest}>
-      {title}
-    </S.Button>
-  );
+  return <S.Button {...rest}>{title}</S.Button>;
 }

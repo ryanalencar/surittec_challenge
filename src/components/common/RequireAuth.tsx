@@ -8,7 +8,7 @@ export default function RequireAuth({ children }: { children: ReactNode }) {
   const { user } = useAuth();
   const location = useLocation();
 
-  if (!user.user || user.user === '') {
+  if (user.user === '') {
     return <Navigate to="/" state={{ from: location }} replace />;
   }
 

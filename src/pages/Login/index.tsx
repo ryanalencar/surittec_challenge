@@ -1,12 +1,12 @@
 import React, { useEffect, useRef, useState } from 'react';
 
 import { FormHandles } from '@unform/core';
-import { Form } from '@unform/web';
 import * as Yup from 'yup';
 
-import Button from '../components/Button';
-import Input from '../components/Input';
-import { useAuth, UserSignInType } from '../hooks/useAuth';
+import Button from '../../components/Button';
+import Input from '../../components/Input';
+import { useAuth, UserSignInType } from '../../hooks/useAuth';
+import * as S from './styles';
 
 export default function Login() {
   const { signIn, signOut } = useAuth();
@@ -29,20 +29,15 @@ export default function Login() {
 
       const response = await signIn(data);
       if (response) reset();
-      else {
-        formRef?.current?.setErrors({
-          user: 'aaaaa',
-        });
-      }
       setIsLoading(false);
     } catch (err) {
       if (err instanceof Yup.ValidationError) {
         const errorMessages: any = {};
         err.inner.forEach((error) => {
-          console.log(error.path);
           errorMessages[error.path!] = error.message;
         });
         formRef.current?.setErrors(errorMessages);
+        setIsLoading(false);
       }
     }
   };
@@ -52,23 +47,25 @@ export default function Login() {
   }, []);
 
   return (
-    <Form onSubmit={handleFormSubmit} ref={formRef}>
-      <h1>Login</h1>
-      <Input
-        type="text"
-        name="user"
-        label="Usuário"
-        placeholder="Usuário"
-        disabled={isLoading}
-      />
-      <Input
-        type="password"
-        name="password"
-        label="Senha"
-        placeholder="Senha"
-        disabled={isLoading}
-      />
-      <Button loading={isLoading} type="submit" title="Entrar" />
-    </Form>
+    <S.Form onSubmit={handleFormSubmit} ref={formRef}>
+      <S.FormTitle>Login</S.FormTitle>
+      <S.FormInputWrapper>
+        <Input
+          type="text"
+          name="user"
+          label="Usuário"
+          placeholder="Usuário"
+          disabled={isLoading}
+        />
+        <Input
+          type="password"
+          name="password"
+          label="Senha"
+          placeholder="Senha"
+          disabled={isLoading}
+        />
+      </S.FormInputWrapper>
+      <Button disabled={isLoading} type="submit" title="Entrar" />
+    </S.Form>
   );
 }

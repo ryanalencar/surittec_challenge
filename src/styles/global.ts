@@ -30,11 +30,4 @@ export const GlobalStyle = createGlobalStyle`
     opacity: 0.6;
     cursor: not-allowed;
   }
-
-  #root {
-    margin: 0 auto;
-    max-width: 400px;
-    width: 100%;
-    padding: 40px 0;
-  }
 `;
