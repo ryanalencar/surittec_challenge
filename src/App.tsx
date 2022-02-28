@@ -2,9 +2,6 @@ import React from 'react';
 
 import { createServer, Model } from 'miragejs';
 
-import { useLocalStorage } from './hooks/useLocalStorage';
-import { api } from './services/api';
-
 createServer({
   models: {
     user: Model,
@@ -29,21 +26,26 @@ createServer({
   },
 });
 
-interface User {
-  user: string;
-}
-
 function App() {
-  const [user, setUser] = useLocalStorage<User>('user', {} as User);
-  const handleButtonClick = async () => {
-    const response = await api.post('sessions', {
-      user: 'admin',
-      password: '123456',
-    });
-    if (response) setUser(response.data.user.user);
-  };
+  // const handleFormSubmit = async (e: FormEvent) => {
+  //   e.preventDefault();
+  //   const response = await api.post('sessions', {
+  //     user: 'admin',
+  //     password: '123456',
+  //   });
+  //   if (response) setUser(response.data.user.user);
+  // };
 
-  return <h1>App Page</h1>;
+  return (
+    <>
+      <h1>Login Page</h1>
+      <form onSubmit={() => {}}>
+        <input type="text" placeholder="Usuário" />
+        <input type="password" placeholder="Senha" />
+        <button type="submit">Entrar</button>
+      </form>
+    </>
+  );
 }
 
 export default App;
