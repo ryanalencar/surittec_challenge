@@ -15,9 +15,9 @@ interface ClientProviderProps {
 
 interface ClientContextProps {
   clients: ClientType[];
-  createClient: (data: ClientInput) => Promise<void>;
-  editClient: (data: ClientType) => Promise<void>;
-  removeClient: (id: number) => Promise<void>;
+  createClient: (data: ClientInput) => any;
+  editClient: (data: ClientType) => any;
+  removeClient: (id: number) => any;
 }
 
 export interface ClientType {
@@ -49,12 +49,15 @@ export function ClientProvider({ children }: ClientProviderProps) {
   const [clients, setClients] = useLocalStorage<ClientType[]>('clients', []);
 
   useEffect(() => {
-    api.get('clients').then((res) => setClients(res.data.clients));
+    api.get('clients').then((res) => {
+      setClients(res.data.clients);
+    });
   }, []);
 
   async function createClient(data: ClientInput) {
     const response = await api.post('clients', data);
-    setClients([...clients, response.data.client]);
+    setClients([...clients, response.data]);
+    return response;
   }
 
   async function editClient(client: ClientType) {
@@ -65,13 +68,14 @@ export function ClientProvider({ children }: ClientProviderProps) {
         : _client,
     );
     setClients(newTransactions);
+    return response;
   }
 
   async function removeClient(id: number) {
     const response = await api.delete(`/clients/${id}`);
     if (response) {
-      const newTransactions = clients.filter((_client) => _client.id !== id);
-      setClients(newTransactions);
+      const newClients = clients.filter((_client) => _client.id !== id);
+      setClients(newClients);
     }
   }
 

@@ -6,6 +6,8 @@ import React, {
   useState,
 } from 'react';
 
+import { ClientType } from './useClient';
+
 interface IModalProviderProps {
   children: ReactNode;
 }
@@ -13,7 +15,7 @@ interface IModalProviderProps {
 interface ModalData {
   editing: boolean;
   deleting: boolean;
-  data?: any;
+  data?: ClientType;
 }
 
 export interface IModalContextData {
@@ -21,7 +23,7 @@ export interface IModalContextData {
   modalData: ModalData;
   toggleModal: () => void;
   toggleEditModal: (data: any) => void;
-  toggleRemoveModal: (data: any) => void;
+  toggleRemoveModal: (clientId: number) => void;
 }
 
 const ModalContext = createContext<IModalContextData>({} as IModalContextData);
@@ -31,7 +33,7 @@ export function ModalProvider({ children }: IModalProviderProps) {
   const [modalData, setModalData] = useState<ModalData>({
     editing: false,
     deleting: false,
-    data: {} as any,
+    data: {} as ClientType,
   });
 
   const toggleModal = () => {
@@ -40,12 +42,12 @@ export function ModalProvider({ children }: IModalProviderProps) {
       setModalData({
         editing: false,
         deleting: false,
-        data: {} as any,
+        data: {} as ClientType,
       });
     } else setIsModalOpen(true);
   };
 
-  const toggleEditModal = (data: any) => {
+  const toggleEditModal = (data: ClientType) => {
     toggleModal();
     setModalData({
       deleting: false,
@@ -54,12 +56,12 @@ export function ModalProvider({ children }: IModalProviderProps) {
     });
   };
 
-  const toggleRemoveModal = (data: any) => {
+  const toggleRemoveModal = (clientId: number) => {
     toggleModal();
     setModalData({
       deleting: true,
       editing: false,
-      data,
+      data: { id: clientId } as ClientType,
     });
   };
 

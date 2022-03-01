@@ -37,11 +37,11 @@ export default function ClientsTable() {
                 <S.TableTbodyItem>{name}</S.TableTbodyItem>
                 <S.TableTbodyItem>{cpf}</S.TableTbodyItem>
                 <S.TableTbodyItem>{email}</S.TableTbodyItem>
-                <S.TableTbodyItem>{phone.number}</S.TableTbodyItem>
+                <S.TableTbodyItem>{phone?.number}</S.TableTbodyItem>
                 <S.TableTbodyItem>
-                  {`${address.street} - ${address.district}, ${address.city}-${address.state}, ${address.zipcode}`}
+                  {`${address?.street} - ${address?.district}, ${address?.city}-${address?.state}, ${address?.zipcode}`}
                   <br />
-                  {address.complement}
+                  {address?.complement}
                 </S.TableTbodyItem>
                 <S.TableTbodyItem>
                   <S.TableTbodyActions>

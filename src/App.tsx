@@ -13,6 +13,8 @@ import { AppRoutes } from './routes';
 import { GlobalStyle } from './styles/global';
 import { theme } from './styles/theme';
 
+const clients = JSON.parse(window.localStorage.getItem('clients')!);
+
 createServer({
   models: {
     user: Model,
@@ -24,26 +26,7 @@ createServer({
         { id: 1, user: 'admin', password: '123456' },
         { id: 2, user: 'comum', password: '123456' },
       ],
-      clients: [
-        {
-          id: 1,
-          name: 'ryan',
-          cpf: '12345678901',
-          address: {
-            street: 'Rua Tibúrcio Cavalcante 2570',
-            zipcode: '60125101',
-            district: 'Dionísio Torres',
-            city: 'Fortaleza',
-            state: 'CE',
-            complement: 'Apto 302',
-          },
-          phone: {
-            type: 'residencial', // residencial, comercial e celular
-            number: '123456',
-          },
-          email: 'ryan@gmail.com',
-        },
-      ],
+      clients,
     });
   },
   routes() {
@@ -53,10 +36,10 @@ createServer({
       const response = schema.users.findBy({ user, password });
       return response || null;
     });
-    this.get('clients', () => this.schema.all('client'));
+    this.get('/clients', (schema: any) => schema.clients.all());
     this.post('/clients', (schema, request) => {
       const data = JSON.parse(request.requestBody);
-      return schema.create('client', data);
+      return schema.db.clients.insert(data);
     });
     this.put('/clients/:id', (schema: any, request) => {
       const data = JSON.parse(request.requestBody);
@@ -64,7 +47,7 @@ createServer({
       const client = schema.clients.find(id);
       return client.update(data);
     });
-    this.del('/clients/:id', (schema: any, request) => {
+    this.delete('/clients/:id', (schema: any, request) => {
       const { id } = request.params;
       return schema.clients.find(id).destroy();
     });

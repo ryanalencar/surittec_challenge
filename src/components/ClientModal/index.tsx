@@ -23,11 +23,6 @@ export default function ClientModal() {
     { reset }: { reset: () => void },
   ) => {
     try {
-      if (deleting) {
-        removeClient(data);
-        toggleModal();
-      }
-
       const schema = Yup.object().shape({
         name: Yup.string()
           .required('O usuário é obrigatório')
@@ -47,15 +42,17 @@ export default function ClientModal() {
         }),
 
         phone: Yup.object().shape({
-          type: Yup.string().required('A senha é obrigatória'),
-          number: Yup.string().required('A senha é obrigatória'),
+          type: Yup.string().required('O tipo de telefone é obrigatório'),
+          number: Yup.string().required('O número de telefone é obrigatório'),
         }),
       });
 
-      await schema.validate(_data, { abortEarly: false });
-
-      if (editing) {
-        await editClient({ ..._data, id: data.id });
+      // await schema.validate(_data, { abortEarly: false });
+      if (deleting === true && editing === false) {
+        removeClient(data?.id || 0);
+        toggleModal();
+      } else if (editing === true && deleting === false) {
+        await editClient({ ..._data, id: data?.id || 0 });
       } else {
         await createClient(_data);
       }
@@ -88,7 +85,7 @@ export default function ClientModal() {
       <Form initialData={data} onSubmit={handleSubmit} ref={formRef}>
         {deleting ? (
           <>
-            <h1>Certeza que deseja remover a transação?</h1>
+            <h1>Certeza que deseja remover a transação{data?.id} ?</h1>
             <Button title="Remover Cliente" colorStyle="danger" type="submit" />
           </>
         ) : (
