@@ -1,7 +1,8 @@
 /* eslint-disable @typescript-eslint/indent */
+import ReactInputMask from 'react-input-mask';
 import styled from 'styled-components';
 
-export const Input = styled.input<{ hasError: boolean }>`
+export const Input = styled.input<{ hasError?: boolean }>`
   width: 100%;
   margin-bottom: 15px;
   padding: 12px 16px;
@@ -37,4 +38,25 @@ export const InputWrapper = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+`;
+
+export const InputMask = styled(ReactInputMask)<{ hasError?: boolean }>`
+  width: 100%;
+  margin-bottom: 15px;
+  padding: 12px 16px;
+  outline: none;
+  border: 2px solid
+    ${({ theme, hasError }) => (hasError ? theme.colors.error : 'transparent')};
+  border-radius: 4px;
+  color: ${({ theme }) => theme.colors.white};
+  transition: border 0.3s ease;
+  background-color: ${({ theme }) => theme.colors.grey900};
+
+  &:focus {
+    border-color: ${({ theme }) => theme.colors.purpleDark};
+  }
+
+  &:disabled {
+    opacity: 0.5;
+  }
 `;

@@ -36,7 +36,7 @@ export interface ClientType {
     type: string; // residencial, comercial e celular
     number: string;
   };
-  email: string;
+  email: string | string[];
 }
 
 export type ClientInput = Omit<ClientType, 'id'>;

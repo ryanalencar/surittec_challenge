@@ -9,6 +9,8 @@ import { useModal } from '../../hooks/useModal';
 import { FormInputWrapper } from '../../pages/Login/styles';
 import Button from '../Button';
 import Input from '../Input';
+import MaskInput from '../Input/MaskInput';
+import Radio, { RadioOptions } from '../Input/Radio';
 import Modal from '../Modal';
 
 export default function ClientModal() {
@@ -17,6 +19,11 @@ export default function ClientModal() {
   const { createClient, removeClient, editClient } = useClient();
   const [modalTitle, setModalTitle] = useState('');
   const formRef = useRef<FormHandles>(null);
+  const radioOptions: RadioOptions[] = [
+    { id: 'residencial', value: 'residencial', label: 'Residencial' },
+    { id: 'comercial', value: 'comercial', label: 'Comercial' },
+    { id: 'celular', value: 'celular', label: 'Celular' },
+  ];
 
   const handleSubmit = async (
     _data: ClientInput,
@@ -47,13 +54,14 @@ export default function ClientModal() {
         }),
       });
 
-      // await schema.validate(_data, { abortEarly: false });
       if (deleting === true && editing === false) {
         removeClient(data?.id || 0);
         toggleModal();
       } else if (editing === true && deleting === false) {
+        await schema.validate(_data, { abortEarly: false });
         await editClient({ ..._data, id: data?.id || 0 });
       } else {
+        await schema.validate(_data, { abortEarly: false });
         await createClient(_data);
       }
       toggleModal();
@@ -85,7 +93,7 @@ export default function ClientModal() {
       <Form initialData={data} onSubmit={handleSubmit} ref={formRef}>
         {deleting ? (
           <>
-            <h1>Certeza que deseja remover a transação{data?.id} ?</h1>
+            <h1>Certeza que deseja remover a transação {data?.id} ?</h1>
             <Button title="Remover Cliente" colorStyle="danger" type="submit" />
           </>
         ) : (
@@ -93,7 +101,11 @@ export default function ClientModal() {
             <FormInputWrapper>
               <Input label="Nome" name="name" />
               <Input label="CPF" name="cpf" />
-              <Input type="email" label="Email" name="email" />
+              <Input
+                type="email"
+                label={'Email(se + de 1, separar com ";")'}
+                name="email"
+              />
               <Scope path="address">
                 <Input label="CEP" name="zipcode" />
                 <Input label="Endereço" name="street" />
@@ -103,8 +115,14 @@ export default function ClientModal() {
                 <Input label="Complemento" name="complement" />
               </Scope>
               <Scope path="phone">
-                <Input label="Tipo de telefone" name="type" />
-                <Input label="Número de telefone" name="number" />
+                <h3>Tipo de telefone</h3>
+                <Radio options={radioOptions} name="type" />
+                <MaskInput
+                  label="Número de telefone"
+                  name="number"
+                  mask="(99)99999-9999"
+                />
+                {/* <Input label="Número de telefone" name="number" /> */}
               </Scope>
             </FormInputWrapper>
             <Button title="Cadastrar" full />

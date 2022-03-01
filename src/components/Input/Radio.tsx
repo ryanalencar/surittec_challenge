@@ -2,7 +2,9 @@ import React, { InputHTMLAttributes, useEffect, useRef } from 'react';
 
 import { useField } from '@unform/core';
 
-type RadioOptions = {
+import * as S from './styles';
+
+export type RadioOptions = {
   id: string;
   value: string;
   label: string;
@@ -15,7 +17,7 @@ interface IRadioProps extends InputHTMLAttributes<HTMLInputElement> {
 
 export default function Radio({ name, options, ...rest }: IRadioProps) {
   const inputRefs = useRef<HTMLInputElement[]>([]);
-  const { fieldName, registerField, defaultValue } = useField(name);
+  const { fieldName, registerField, defaultValue, error } = useField(name);
 
   useEffect(() => {
     registerField({
@@ -37,7 +39,7 @@ export default function Radio({ name, options, ...rest }: IRadioProps) {
   return (
     <>
       {options.map((option, index) => (
-        <label htmlFor={option.id} key={option.id}>
+        <S.InputLabel htmlFor={option.id} key={option.id}>
           <input
             ref={(ref) => {
               if (ref) inputRefs.current[index] = ref;
@@ -45,13 +47,14 @@ export default function Radio({ name, options, ...rest }: IRadioProps) {
             id={option.id}
             type="radio"
             name={name}
-            defaultChecked={defaultValue.includes(option.id)}
+            defaultChecked={defaultValue?.includes(option.id)}
             value={option.value}
             {...rest}
           />
           {option.label}
-        </label>
+        </S.InputLabel>
       ))}
+      {error && <S.ErrorMessage>{error}</S.ErrorMessage>}
     </>
   );
 }
