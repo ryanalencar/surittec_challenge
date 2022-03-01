@@ -31,6 +31,7 @@ createServer({
   },
   routes() {
     this.namespace = 'api';
+    this.passthrough('https://viacep.com.br/ws/**');
     this.post('/sessions', (schema: any, request) => {
       const { user, password } = JSON.parse(request.requestBody);
       const response = schema.users.findBy({ user, password });

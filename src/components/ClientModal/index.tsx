@@ -1,4 +1,10 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, {
+  ChangeEvent,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 
 import { FormHandles, Scope } from '@unform/core';
 import { Form } from '@unform/web';
@@ -15,12 +21,29 @@ import Modal from '../Modal';
 
 type PhoneMask = 'residencial' | 'comercial' | 'celular';
 
+interface AddressData {
+  cep: string;
+  logradouro: string;
+  complemento: string;
+  bairro: string;
+  localidade: string;
+  uf: string;
+  ibge: string;
+  gia: string;
+  ddd: string;
+  siafi: string;
+}
+
 export default function ClientModal() {
   const { isModalOpen, toggleModal, modalData } = useModal();
   const { deleting, editing, data } = modalData;
   const { createClient, removeClient, editClient } = useClient();
   const [modalTitle, setModalTitle] = useState('');
   const [selectedMask, setSelectedMask] = useState('');
+  const [addressData, setAddressData] = useState<AddressData>(
+    {} as AddressData,
+  );
+  const { bairro, complemento, logradouro, uf, localidade } = addressData;
   const formRef = useRef<FormHandles>(null);
   const radioOptions: RadioOptions[] = [
     { id: 'residencial', value: 'residencial', label: 'Residencial' },
@@ -114,6 +137,22 @@ export default function ClientModal() {
     }
   }, [editing, deleting]);
 
+  const handleCepSearch = useCallback(
+    async (e: ChangeEvent<HTMLInputElement>) => {
+      const formattedCep = e.target.value.replace(/[^\d]/g, '');
+      if (e.target.value.includes('_') === false) {
+        fetch(`https://viacep.com.br/ws/${formattedCep}/json/`)
+          .then((res) => res.json())
+          .then((_data) => setAddressData(_data));
+      } else {
+        setAddressData({} as AddressData);
+      }
+    },
+    [],
+  );
+
+  console.log(addressData);
+
   return (
     <Modal isOpen={isModalOpen} onRequestClose={toggleModal} title={modalTitle}>
       <Form initialData={data} onSubmit={handleSubmit} ref={formRef}>
@@ -138,12 +177,27 @@ export default function ClientModal() {
                 name="email"
               />
               <Scope path="address">
-                <Input label="CEP" name="zipcode" />
-                <Input label="Endereço" name="street" />
-                <Input label="Bairro" name="district" />
-                <Input label="Cidade" name="city" />
-                <Input label="Estado" name="state" />
-                <Input label="Complemento" name="complement" />
+                <MaskInput
+                  label="CEP"
+                  name="zipcode"
+                  mask="99999-999"
+                  onChange={(e) => {
+                    handleCepSearch(e);
+                  }}
+                />
+                <Input
+                  label="Endereço"
+                  name="street"
+                  defaultValue={logradouro}
+                />
+                <Input label="Bairro" name="district" defaultValue={bairro} />
+                <Input label="Cidade" name="city" defaultValue={localidade} />
+                <Input label="UF" name="state" defaultValue={uf} />
+                <Input
+                  label="Complemento"
+                  name="complement"
+                  defaultValue={complemento}
+                />
               </Scope>
               <Scope path="phone">
                 <h3>Tipo de telefone</h3>
