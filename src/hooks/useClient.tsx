@@ -61,7 +61,7 @@ export function ClientProvider({ children }: ClientProviderProps) {
     const response = await api.put(`/clients/${client.id}`, client);
     const newTransactions = clients.map((_client) =>
       _client.id === client.id
-        ? { ..._client, ...response.data.transaction }
+        ? { ..._client, ...response.data.client }
         : _client,
     );
     setClients(newTransactions);

@@ -23,7 +23,10 @@ export default function ClientModal() {
     { reset }: { reset: () => void },
   ) => {
     try {
-      if (deleting) removeClient(data);
+      if (deleting) {
+        removeClient(data);
+        toggleModal();
+      }
 
       const schema = Yup.object().shape({
         name: Yup.string()
