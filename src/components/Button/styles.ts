@@ -3,9 +3,11 @@ import styled, { css } from 'styled-components';
 
 interface IButtonProps {
   colorStyle?: 'primary' | 'success' | 'danger';
+  full?: boolean;
 }
 
 export const Button = styled.button<IButtonProps>`
+  ${({ full }) => full && 'width: 100%'};
   height: 2.5rem;
   padding: 0 1.5rem;
   border: 1px solid transparent;
