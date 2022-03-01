@@ -22,7 +22,7 @@ export function ModalProvider({ children }: IModalProviderProps) {
 
   const toggleModal = () => {
     if (isModalOpen) setIsModalOpen(false);
-    setIsModalOpen(true);
+    else setIsModalOpen(true);
   };
 
   const providerValue = useMemo(

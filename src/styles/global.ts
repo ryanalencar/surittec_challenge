@@ -12,6 +12,12 @@ export const GlobalStyle = createGlobalStyle`
     transition: opacity 300ms ease-in-out;
   }
 
+  .ReactModal__Content {
+    max-width: calc(100vw - 2rem);
+    max-height: calc(100vh - 2rem);
+    overflow-y: auto;
+  }
+
   .ReactModal__Overlay--after-open {
     opacity: 1;
   }

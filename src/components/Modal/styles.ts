@@ -1,10 +1,11 @@
+import { transparentize } from 'polished';
 import ReactModal from 'react-modal';
 import styled from 'styled-components';
 
 export const Modal = styled(ReactModal).attrs(({ theme }) => ({
   style: {
     overlay: {
-      backgroundColor: theme.colors.background,
+      backgroundColor: transparentize(0.3, theme.colors.grey900),
       position: 'fixed',
       top: 0,
       bottom: 0,
@@ -24,7 +25,18 @@ export const Modal = styled(ReactModal).attrs(({ theme }) => ({
       borderRadius: 4,
     },
   },
-}))``;
+}))`
+  &::-webkit-scrollbar {
+    width: 0.4em;
+  }
+  &::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px ${({ theme }) => theme.colors.purpleMid};
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: ${({ theme }) => theme.colors.greenLight};
+    border-radius: 4px;
+  }
+`;
 
 export const ModalTitle = styled.h2`
   color: ${({ theme }) => theme.colors.text};
