@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 import { FormHandles, Scope } from '@unform/core';
 import { Form } from '@unform/web';
@@ -12,15 +12,19 @@ import Input from '../Input';
 import Modal from '../Modal';
 
 export default function ClientModal() {
-  const { isModalOpen, toggleModal } = useModal();
-  const { createClient } = useClient();
+  const { isModalOpen, toggleModal, modalData } = useModal();
+  const { deleting, editing, data } = modalData;
+  const { createClient, removeClient, editClient } = useClient();
+  const [modalTitle, setModalTitle] = useState('');
   const formRef = useRef<FormHandles>(null);
 
   const handleSubmit = async (
-    data: ClientInput,
+    _data: ClientInput,
     { reset }: { reset: () => void },
   ) => {
     try {
+      if (deleting) removeClient(data);
+
       const schema = Yup.object().shape({
         name: Yup.string()
           .required('O usuário é obrigatório')
@@ -45,9 +49,13 @@ export default function ClientModal() {
         }),
       });
 
-      await schema.validate(data, { abortEarly: false });
+      await schema.validate(_data, { abortEarly: false });
 
-      createClient(data);
+      if (editing) {
+        await editClient({ ..._data, id: data.id });
+      } else {
+        await createClient(_data);
+      }
       toggleModal();
       reset();
     } catch (err) {
@@ -61,30 +69,47 @@ export default function ClientModal() {
     }
   };
 
+  useEffect(() => {
+    if (editing) {
+      setModalTitle('Editar Cliente');
+    }
+    if (deleting) {
+      setModalTitle('Remover Cliente');
+    } else {
+      setModalTitle('Cadastrar Cliente');
+    }
+  }, [editing, deleting]);
+
   return (
-    <Modal
-      isOpen={isModalOpen}
-      onRequestClose={toggleModal}
-      title="Cadastrar Cliente">
-      <Form onSubmit={handleSubmit} ref={formRef}>
-        <FormInputWrapper>
-          <Input label="Nome" name="name" />
-          <Input label="CPF" name="cpf" />
-          <Input type="email" label="Email" name="email" />
-          <Scope path="address">
-            <Input label="CEP" name="zipcode" />
-            <Input label="Endereço" name="street" />
-            <Input label="Bairro" name="district" />
-            <Input label="Cidade" name="city" />
-            <Input label="Estado" name="state" />
-            <Input label="Complemento" name="complement" />
-          </Scope>
-          <Scope path="phone">
-            <Input label="Tipo de telefone" name="type" />
-            <Input label="Número de telefone" name="number" />
-          </Scope>
-        </FormInputWrapper>
-        <Button title="Cadastrar" full />
+    <Modal isOpen={isModalOpen} onRequestClose={toggleModal} title={modalTitle}>
+      <Form initialData={data} onSubmit={handleSubmit} ref={formRef}>
+        {deleting ? (
+          <>
+            <h1>Certeza que deseja remover a transação?</h1>
+            <Button title="Remover Cliente" colorStyle="danger" type="submit" />
+          </>
+        ) : (
+          <>
+            <FormInputWrapper>
+              <Input label="Nome" name="name" />
+              <Input label="CPF" name="cpf" />
+              <Input type="email" label="Email" name="email" />
+              <Scope path="address">
+                <Input label="CEP" name="zipcode" />
+                <Input label="Endereço" name="street" />
+                <Input label="Bairro" name="district" />
+                <Input label="Cidade" name="city" />
+                <Input label="Estado" name="state" />
+                <Input label="Complemento" name="complement" />
+              </Scope>
+              <Scope path="phone">
+                <Input label="Tipo de telefone" name="type" />
+                <Input label="Número de telefone" name="number" />
+              </Scope>
+            </FormInputWrapper>
+            <Button title="Cadastrar" full />
+          </>
+        )}
       </Form>
     </Modal>
   );

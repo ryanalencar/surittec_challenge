@@ -7,10 +7,6 @@ export const GlobalStyle = createGlobalStyle`
     box-sizing: border-box;
   }
 
-  .ReactModal__Overlay {
-    opacity: 0;
-    transition: opacity 300ms ease-in-out;
-  }
 
   .ReactModal__Content {
     max-width: calc(100vw - 2rem);

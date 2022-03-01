@@ -15,9 +15,9 @@ interface ClientProviderProps {
 
 interface ClientContextProps {
   clients: ClientType[];
-  createClient: (data: ClientInput) => void;
-  editClient: (data: ClientType) => void;
-  removeClient: (id: number) => void;
+  createClient: (data: ClientInput) => Promise<void>;
+  editClient: (data: ClientType) => Promise<void>;
+  removeClient: (id: number) => Promise<void>;
 }
 
 export interface ClientType {
