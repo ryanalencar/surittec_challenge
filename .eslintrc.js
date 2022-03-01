@@ -27,6 +27,7 @@ module.exports = {
     'unused-imports'
   ],
   rules: {
+    'react/jsx-one-expression-per-line': 'off',
     'function-paren-newline': 'off',
     'react/require-default-props': 'off',
     'react/jsx-wrap-multilines': 'off',

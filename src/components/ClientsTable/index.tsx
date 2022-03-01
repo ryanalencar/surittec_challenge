@@ -4,11 +4,13 @@ import { IoMdTrash } from 'react-icons/io';
 import { IoPencil } from 'react-icons/io5';
 import { useTheme } from 'styled-components';
 
+import { useAuth } from '../../hooks/useAuth';
 import { useClient } from '../../hooks/useClient';
 import * as S from './styles';
 
 export default function ClientsTable() {
   const { clients, removeClient } = useClient();
+  const { user } = useAuth();
   const theme = useTheme();
 
   return (
@@ -41,13 +43,16 @@ export default function ClientsTable() {
                 </S.TableTbodyItem>
                 <S.TableTbodyItem>
                   <S.TableTbodyActions>
-                    <S.TableActionButton onClick={() => {}}>
+                    <S.TableActionButton
+                      onClick={() => {}}
+                      disabled={user !== 'admin'}>
                       <IoPencil size={25} color={theme.colors.purpleLight} />
                     </S.TableActionButton>
                     <S.TableActionButton
                       onClick={() => {
                         removeClient(id);
-                      }}>
+                      }}
+                      disabled={user !== 'admin'}>
                       <IoMdTrash size={25} color={theme.colors.error} />
                     </S.TableActionButton>
                   </S.TableTbodyActions>

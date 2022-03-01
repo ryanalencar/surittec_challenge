@@ -11,3 +11,15 @@ export const Header = styled.div`
   align-items: center;
   justify-content: space-between;
 `;
+
+export const UserInfo = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+`;
+
+export const HeaderButtons = styled.div`
+  display: flex;
+  gap: 1rem;
+`;
