@@ -6,10 +6,12 @@ import { useTheme } from 'styled-components';
 
 import { useAuth } from '../../hooks/useAuth';
 import { useClient } from '../../hooks/useClient';
+import { useModal } from '../../hooks/useModal';
 import * as S from './styles';
 
 export default function ClientsTable() {
   const { clients, removeClient } = useClient();
+  const { toggleEditModal, toggleRemoveModal } = useModal();
   const { user } = useAuth();
   const theme = useTheme();
 
@@ -44,13 +46,22 @@ export default function ClientsTable() {
                 <S.TableTbodyItem>
                   <S.TableTbodyActions>
                     <S.TableActionButton
-                      onClick={() => {}}
+                      onClick={() => {
+                        toggleEditModal({
+                          id,
+                          name,
+                          cpf,
+                          email,
+                          phone,
+                          address,
+                        });
+                      }}
                       disabled={user !== 'admin'}>
                       <IoPencil size={25} color={theme.colors.purpleLight} />
                     </S.TableActionButton>
                     <S.TableActionButton
                       onClick={() => {
-                        removeClient(id);
+                        toggleRemoveModal(id);
                       }}
                       disabled={user !== 'admin'}>
                       <IoMdTrash size={25} color={theme.colors.error} />

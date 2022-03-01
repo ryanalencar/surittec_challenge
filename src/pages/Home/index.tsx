@@ -27,7 +27,9 @@ export default function Home() {
           <Button
             title="Cadastrar cliente"
             disabled={user !== 'admin'}
-            onClick={toggleModal}
+            onClick={() => {
+              toggleModal();
+            }}
           />
           <Button title="Deslogar" colorStyle="danger" onClick={signOut} />
         </S.HeaderButtons>
