@@ -36,8 +36,18 @@ export default function ClientsTable() {
               <tr key={id}>
                 <S.TableTbodyItem>{name}</S.TableTbodyItem>
                 <S.TableTbodyItem>{cpf}</S.TableTbodyItem>
-                <S.TableTbodyItem>{email}</S.TableTbodyItem>
-                <S.TableTbodyItem>{phone?.number}</S.TableTbodyItem>
+                <S.TableTbodyItem>
+                  {email.length > 1 ? (
+                    <small>{Array(email).map((mail) => `\n${mail}\n`)}</small>
+                  ) : (
+                    email
+                  )}
+                </S.TableTbodyItem>
+                <S.TableTbodyItem>
+                  {phone?.number}
+                  <br />
+                  <small>({phone?.type})</small>
+                </S.TableTbodyItem>
                 <S.TableTbodyItem>
                   {`${address?.street} - ${address?.district}, ${address?.city}-${address?.state}, ${address?.zipcode}`}
                   <br />

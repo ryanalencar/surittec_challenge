@@ -58,11 +58,9 @@ export default function ClientModal() {
     try {
       const formattedPhone = _data.phone.number.replace(/[^\d]/g, '');
       const formattedCpf = _data.cpf.replace(/[^\d]/g, '');
-      const formattedData: ClientInput = {
-        ..._data,
-        phone: { number: formattedPhone, type: _data.phone.type },
-        cpf: formattedCpf,
-      };
+      const formattedEmail = _data.email.includes(';')
+        ? String(_data.email).split(';')
+        : _data.email;
 
       const schema = Yup.object().shape({
         name: Yup.string()
@@ -70,9 +68,7 @@ export default function ClientModal() {
           .min(3, 'O nome precisa ter no mínimo 3 caracteres')
           .max(100),
         cpf: Yup.string().required('O CPF é obrigatório'),
-        email: Yup.string()
-          .required('A senha é obrigatória')
-          .email('O email deve estar no formato correto.'),
+        email: Yup.string().required('O email é obrigatória'),
 
         address: Yup.object().shape({
           zipcode: Yup.string().required('O CEP é obrigatório'),
@@ -88,7 +84,15 @@ export default function ClientModal() {
         }),
       });
 
-      await schema.validate(formattedData, { abortEarly: false });
+      await schema.validate(_data, { abortEarly: false });
+
+      const formattedData: ClientInput = {
+        ..._data,
+        phone: { number: formattedPhone, type: _data.phone.type },
+        cpf: formattedCpf,
+        email: formattedEmail,
+      };
+
       if (editing === true && deleting === false) {
         await editClient({ ...formattedData, id: data?.id || 0 });
       } else {
@@ -151,8 +155,6 @@ export default function ClientModal() {
     [],
   );
 
-  console.log(addressData);
-
   return (
     <Modal isOpen={isModalOpen} onRequestClose={toggleModal} title={modalTitle}>
       <Form initialData={data} onSubmit={handleSubmit} ref={formRef}>
@@ -172,7 +174,7 @@ export default function ClientModal() {
               <Input label="Nome" name="name" />
               <MaskInput label="CPF" name="cpf" mask="999.999.999-99" />
               <Input
-                type="email"
+                type="text"
                 label={'Email(se + de 1, separar com ";")'}
                 name="email"
               />

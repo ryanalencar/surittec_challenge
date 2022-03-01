@@ -42,3 +42,8 @@ export const TableActionButton = styled.button`
   justify-content: center;
   align-items: center;
 `;
+
+export const EmailInfo = styled.div`
+  display: grid;
+  grid-template-columns: 1fr;
+`;
