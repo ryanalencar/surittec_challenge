@@ -10,7 +10,7 @@ import { useModal } from '../../hooks/useModal';
 import * as S from './styles';
 
 export default function ClientsTable() {
-  const { clients, removeClient } = useClient();
+  const { clients } = useClient();
   const { toggleEditModal, toggleRemoveModal } = useModal();
   const { user } = useAuth();
   const theme = useTheme();

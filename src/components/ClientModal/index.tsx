@@ -13,11 +13,14 @@ import MaskInput from '../Input/MaskInput';
 import Radio, { RadioOptions } from '../Input/Radio';
 import Modal from '../Modal';
 
+type PhoneMask = 'residencial' | 'comercial' | 'celular';
+
 export default function ClientModal() {
   const { isModalOpen, toggleModal, modalData } = useModal();
   const { deleting, editing, data } = modalData;
   const { createClient, removeClient, editClient } = useClient();
   const [modalTitle, setModalTitle] = useState('');
+  const [selectedMask, setSelectedMask] = useState('');
   const formRef = useRef<FormHandles>(null);
   const radioOptions: RadioOptions[] = [
     { id: 'residencial', value: 'residencial', label: 'Residencial' },
@@ -30,6 +33,14 @@ export default function ClientModal() {
     { reset }: { reset: () => void },
   ) => {
     try {
+      const formattedPhone = _data.phone.number.replace(/[^\d]/g, '');
+      const formattedCpf = _data.cpf.replace(/[^\d]/g, '');
+      const formattedData: ClientInput = {
+        ..._data,
+        phone: { number: formattedPhone, type: _data.phone.type },
+        cpf: formattedCpf,
+      };
+
       const schema = Yup.object().shape({
         name: Yup.string()
           .required('O usuário é obrigatório')
@@ -54,16 +65,13 @@ export default function ClientModal() {
         }),
       });
 
-      if (deleting === true && editing === false) {
-        removeClient(data?.id || 0);
-        toggleModal();
-      } else if (editing === true && deleting === false) {
-        await schema.validate(_data, { abortEarly: false });
-        await editClient({ ..._data, id: data?.id || 0 });
+      await schema.validate(formattedData, { abortEarly: false });
+      if (editing === true && deleting === false) {
+        await editClient({ ...formattedData, id: data?.id || 0 });
       } else {
-        await schema.validate(_data, { abortEarly: false });
-        await createClient(_data);
+        await createClient(formattedData);
       }
+
       toggleModal();
       reset();
     } catch (err) {
@@ -74,6 +82,24 @@ export default function ClientModal() {
         });
         formRef.current?.setErrors(errorMessages);
       }
+    }
+  };
+
+  const handleDelete = (id: number) => {
+    removeClient(id);
+    toggleModal();
+  };
+
+  const handleSelectedMask = () => {
+    const mask: PhoneMask = (
+      document?.querySelector('input[name="type"]:checked') as HTMLInputElement
+    )?.value as PhoneMask;
+    if (mask === 'residencial') {
+      setSelectedMask('9999-9999');
+    } else if (mask === 'comercial') {
+      setSelectedMask('(99)99999-9999');
+    } else {
+      setSelectedMask('(99)99999-9999');
     }
   };
 
@@ -94,13 +120,18 @@ export default function ClientModal() {
         {deleting ? (
           <>
             <h1>Certeza que deseja remover a transação {data?.id} ?</h1>
-            <Button title="Remover Cliente" colorStyle="danger" type="submit" />
+            <Button
+              title="Remover Cliente"
+              colorStyle="danger"
+              type="button"
+              onClick={() => handleDelete(data?.id || 0)}
+            />
           </>
         ) : (
           <>
             <FormInputWrapper>
               <Input label="Nome" name="name" />
-              <Input label="CPF" name="cpf" />
+              <MaskInput label="CPF" name="cpf" mask="999.999.999-99" />
               <Input
                 type="email"
                 label={'Email(se + de 1, separar com ";")'}
@@ -116,13 +147,16 @@ export default function ClientModal() {
               </Scope>
               <Scope path="phone">
                 <h3>Tipo de telefone</h3>
-                <Radio options={radioOptions} name="type" />
+                <Radio
+                  onChange={handleSelectedMask}
+                  options={radioOptions}
+                  name="type"
+                />
                 <MaskInput
                   label="Número de telefone"
                   name="number"
-                  mask="(99)99999-9999"
+                  mask={selectedMask}
                 />
-                {/* <Input label="Número de telefone" name="number" /> */}
               </Scope>
             </FormInputWrapper>
             <Button title="Cadastrar" full />
