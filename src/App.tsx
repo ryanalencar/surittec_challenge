@@ -7,6 +7,7 @@ import { BrowserRouter } from 'react-router-dom';
 import { ThemeProvider } from 'styled-components';
 
 import { AuthProvider } from './hooks/useAuth';
+import { ClientProvider } from './hooks/useClient';
 import { ModalProvider } from './hooks/useModal';
 import { AppRoutes } from './routes';
 import { GlobalStyle } from './styles/global';
@@ -53,6 +54,20 @@ createServer({
       return response || null;
     });
     this.get('clients', () => this.schema.all('client'));
+    this.post('/clients', (schema, request) => {
+      const data = JSON.parse(request.requestBody);
+      return schema.create('client', data);
+    });
+    this.put('/clients/:id', (schema: any, request) => {
+      const data = JSON.parse(request.requestBody);
+      const { id } = request.params;
+      const client = schema.clients.find(id);
+      return client.update(data);
+    });
+    this.del('/clients/:id', (schema: any, request) => {
+      const { id } = request.params;
+      return schema.clients.find(id).destroy();
+    });
   },
 });
 
@@ -60,16 +75,18 @@ Modal.setAppElement('#root');
 
 function App() {
   return (
-    <BrowserRouter>
-      <ThemeProvider theme={theme}>
-        <ModalProvider>
-          <AuthProvider>
-            <AppRoutes />
-          </AuthProvider>
-          <GlobalStyle />
-        </ModalProvider>
-      </ThemeProvider>
-    </BrowserRouter>
+    <ThemeProvider theme={theme}>
+      <BrowserRouter>
+        <ClientProvider>
+          <ModalProvider>
+            <AuthProvider>
+              <AppRoutes />
+            </AuthProvider>
+            <GlobalStyle />
+          </ModalProvider>
+        </ClientProvider>
+      </BrowserRouter>
+    </ThemeProvider>
   );
 }
 

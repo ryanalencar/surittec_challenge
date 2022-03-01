@@ -3,7 +3,7 @@ import React from 'react';
 import { Scope } from '@unform/core';
 import { Form } from '@unform/web';
 
-import { UserSignInType } from '../../hooks/useAuth';
+import { ClientInput, useClient } from '../../hooks/useClient';
 import { useModal } from '../../hooks/useModal';
 import Button from '../Button';
 import Input from '../Input';
@@ -11,18 +11,21 @@ import Modal from '../Modal';
 
 export default function ClientModal() {
   const { isModalOpen, toggleModal } = useModal();
+  const { createClient } = useClient();
 
   const handleSubmit = async (
-    data: UserSignInType,
+    data: ClientInput,
     { reset }: { reset: () => void },
-  ) => {};
+  ) => {
+    createClient(data);
+  };
 
   return (
     <Modal
       isOpen={isModalOpen}
       onRequestClose={toggleModal}
       title="Cadastrar Cliente">
-      <Form>
+      <Form onSubmit={handleSubmit}>
         <Input label="Nome" name="name" />
         <Input label="CPF" name="cpf" />
         <Input type="email" label="Email" name="email" />

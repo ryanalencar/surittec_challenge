@@ -31,7 +31,7 @@ export const TableTbodyItem = styled.td`
 
 export const TableTbodyActions = styled.div`
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
   align-items: center;
 `;
 
